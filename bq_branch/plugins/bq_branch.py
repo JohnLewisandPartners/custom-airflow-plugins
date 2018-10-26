@@ -66,7 +66,9 @@ class BranchBQOperator(BaseOperator, SkipMixin):
     :param delegate_to: The account to impersonate, if any.
         For this to work, the service account making the request must have domain-wide delegation enabled.
     :type delegate_to: string
-    :param sql: The sql to run. This should only return one row
+    :param sql: The sql to run. This should only return one row.
+    This can either be a string containing a query, or a file ending in .sql
+    If using a file, be sure to set template_searchpath at the DAG level to indicate the folder where the sql file is
     :type sql: string
     :param pass_task: The task to run next if all sql results are true
     :type pass_task: string
