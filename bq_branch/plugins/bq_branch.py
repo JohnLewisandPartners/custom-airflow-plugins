@@ -27,7 +27,38 @@ from airflow.utils.decorators import apply_defaults
 
 class BranchBQOperator(BaseOperator, SkipMixin):
     """
-    This operator is used to branch on the result of some bigquery sql
+    This operator is used to branch on the result of some bigquery sql.
+    The sql should return one row, and all columns are evaluated as either true or false
+    If all columns return something that is converted to true, then the pass_task is followed
+    If all columns return something that is converted to false, then the fail_task is followed
+
+    Note that Python bool casting evals the following as ``False``:
+    * ``False``
+    * ``0``
+    * Empty string (``""``)
+    * Empty list (``[]``)
+    * Empty dictionary or set (``{}``)
+
+    In this example, if my_dataset.my_table contains rows, then pass_task is followed
+    Otherwise fail_task is followed
+
+    CHECK_LAST_UPDATE_DATE_FOR_TABLES = BranchBQOperator(
+        task_id='check_last_update_for_tables',
+        sql='select count(*) from my_dataset.my_table,
+        use_legacy_sql=False,
+        bigquery_conn_id='bigquery_default',
+        pass_task='pass_task',
+        fail_task='fail_task',
+        dag=dag)
+
+    PASS_TASK = dummy_operator.DummyOperator(
+        task_id='pass_task',
+        dag=dag)
+
+    FAIL_TASK = dummy_operator.DummyOperator(
+        task_id='start',
+        dag=dag)
+
 
     :param bigquery_conn_id: The connection ID to use when
         connecting to BigQuery.
@@ -41,9 +72,12 @@ class BranchBQOperator(BaseOperator, SkipMixin):
     :type pass_task: string
     :param fail_task: The task to run next if one of sql results are not true
     :type fail_task: string
-
+    :param use_legacy_sql: Whether to use legacy SQL (true)
+        or standard SQL (false).
+    :type use_legacy_sql: bool
     """
     template_fields = ('sql',)
+    template_ext = ('.sql', )
 
     @apply_defaults
     def __init__(
