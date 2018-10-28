@@ -20,7 +20,7 @@ This provides an operator that sends a message to slack using slack incoming web
 This provides an operator that can be used to set the description on a table in BigQuery
 
 ### BigQuery branch plugin
-This provides an operator that can be used to branch on the result of a BigQuery query
+This provides an operator that can be used to branch on the result of a BigQuery query.   
 Note - the version in master branch only works on airflow 1.10. There is a branch called airflow_1.9 that works on airflow 1.9
 
 ## Licence
