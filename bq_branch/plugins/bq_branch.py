@@ -70,9 +70,9 @@ class BranchBQOperator(BaseOperator, SkipMixin):
     This can either be a string containing a query, or a file ending in .sql
     If using a file, be sure to set template_searchpath at the DAG level to indicate the folder where the sql file is
     :type sql: string
-    :param pass_task: The task to run next if all sql results are true
+    :param pass_task: The task_id of the task to run next if all sql results are true
     :type pass_task: string
-    :param fail_task: The task to run next if one of sql results are not true
+    :param fail_task: The task_id of the task to run next if one of sql results are not true
     :type fail_task: string
     :param use_legacy_sql: Whether to use legacy SQL (true)
         or standard SQL (false).
